@@ -21,6 +21,11 @@ client = {}
 client_addr = set()
 clients_lock = threading.Lock()
 inbox_size = 10
+jokes = ["A fire hydrant has H2O on the inside and K9P on the outside",
+         "Did you hear about the crook who stole a calendar? He got twelve months",
+         "Did you hear about the semi-colon that broke the law? He was given two consecutive sentences",
+         "I own the world's worst thesaurus. Not only is it awful, it's awful",
+         "Moses had the first tablet that could connect to the cloud"]
 
 
 class ClientHandler(Thread):
@@ -106,7 +111,7 @@ class ClientHandler(Thread):
             response = self.get_inbox(user)
             self._client_socket.send(response.encode())
         elif msg[0] == "joke":
-            response = get_joke()
+            response = get_joke() + "\n"
             self._client_socket.send(response.encode())
 
 
@@ -199,8 +204,11 @@ def broadcast(sender, message):
         response = 'msgerr no content\n'
         return response
 
-
-
+    
+def get_joke():
+    global jokes
+    response = random.choice(jokes)
+    return response
 
 
 if __name__ == '__main__':
