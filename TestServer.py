@@ -80,7 +80,7 @@ class ClientHandler(Thread):
         msg = msg.split()
         if msg[0] == "msg":
             message = msg[1:]
-            response = broadcast(sender, message)
+            response = self.broadcast(sender, message)
             print(response)
             self._client_socket.send(response.encode())
         elif msg[0] == "async":
@@ -154,7 +154,9 @@ class ClientHandler(Thread):
             with self.lock:
                 for client[sender] in client:
                     if sender == self._client_address:
-                        c.sendall(msg.encode())
+                        self._client_socket.sendall(msg.encode())
+            response = "msgok\n"
+            return response
 
 
     def priv_msg(self, sender, rec, message):
